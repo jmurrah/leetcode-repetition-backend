@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"os"
 	"time"
@@ -62,9 +63,17 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		}, err
 	}
 
+	// Add delay for API key propagation
+	time.Sleep(7 * time.Second)
+
+	responseBody, _ := json.Marshal(map[string]interface{}{
+		"message": "Generated new API key!",
+		"apiKey":  aws.ToString(keyResult.Value),
+	})
+
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
-		Body:       aws.ToString(keyResult.Value),
+		Body:       string(responseBody),
 		Headers: map[string]string{
 			"Content-Type":                 "application/json",
 			"Access-Control-Allow-Origin":  "*",
