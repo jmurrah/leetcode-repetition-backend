@@ -63,9 +63,6 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		}, err
 	}
 
-	// Add delay for API key propagation
-	time.Sleep(7 * time.Second)
-
 	responseBody, _ := json.Marshal(map[string]interface{}{
 		"message": "Generated new API key!",
 		"apiKey":  aws.ToString(keyResult.Value),
